@@ -27,12 +27,8 @@ let UserResolver = class UserResolver {
     login(ctx, input) {
         return this.userService.login(input, ctx);
     }
-    me() {
-        return {
-            _id: "1",
-            name: "mohiden",
-            email: "mo@gmail.com",
-        };
+    me(ctx) {
+        return ctx.user;
     }
 };
 __decorate([
@@ -51,9 +47,10 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "login", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => schemas_1.User),
+    (0, type_graphql_1.Query)(() => schemas_1.User, { nullable: true }),
+    __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", schemas_1.User)
 ], UserResolver.prototype, "me", null);
 UserResolver = __decorate([

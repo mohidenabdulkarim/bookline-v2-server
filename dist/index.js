@@ -15,13 +15,18 @@ const utils_1 = require("./utils");
 async function main() {
     const schema = await (0, type_graphql_1.buildSchema)({
         resolvers: resolvers_1.resolvers,
+        authChecker: utils_1.authChecker,
     });
     const app = (0, express_1.default)();
     app.use((0, cookie_parser_1.default)());
     const server = new apollo_server_express_1.ApolloServer({
         schema,
         context: (ctx) => {
-            console.log(ctx);
+            if (ctx.req.headers["authorization"]) {
+                const user = (0, utils_1.verifyJwt)(ctx.req.headers["authorization"]);
+                ctx.user = user;
+                return ctx;
+            }
             return ctx;
         },
         plugins: [

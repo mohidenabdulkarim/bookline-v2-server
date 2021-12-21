@@ -18,12 +18,9 @@ export class UserResolver {
   login(@Ctx() ctx: Context, @Arg("input") input: LoginInput) {
     return this.userService.login(input, ctx);
   }
-  @Query(() => User)
-  me(): User {
-    return {
-      _id: "1",
-      name: "mohiden",
-      email: "mo@gmail.com",
-    };
+
+  @Query(() => User, { nullable: true })
+  me(@Ctx() ctx: Context): User {
+    return ctx.user;
   }
 }

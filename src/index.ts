@@ -9,12 +9,14 @@ import {
   ApolloServerPluginLandingPageProductionDefault,
 } from "apollo-server-core";
 import { resolvers } from "./resolvers";
-import { connect } from "./utils";
+import { authChecker, connect, verifyJwt } from "./utils";
+import { Context } from "./types";
+import { User } from "./schemas";
 
 async function main() {
   const schema = await buildSchema({
     resolvers,
-    // authChecker,
+    authChecker,
   });
 
   const app = express();
@@ -23,8 +25,12 @@ async function main() {
 
   const server = new ApolloServer({
     schema,
-    context: (ctx) => {
-      console.log(ctx);
+    context: (ctx: Context) => {
+      if (ctx.req.headers["authorization"]) {
+        const user = verifyJwt<User>(ctx.req.headers["authorization"]);
+        ctx.user = user as User;
+        return ctx;
+      }
       return ctx;
     },
     plugins: [

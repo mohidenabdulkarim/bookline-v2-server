@@ -7,6 +7,7 @@ exports.UserService = void 0;
 const schemas_1 = require("../schemas");
 const apollo_server_1 = require("apollo-server");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const utils_1 = require("../utils");
 class UserService {
     async createUser(input) {
         return schemas_1.UserModel.create(input);
@@ -18,7 +19,16 @@ class UserService {
         const isValid = await bcrypt_1.default.compare(input.password, user.password);
         if (!isValid)
             throw new apollo_server_1.ApolloError("Invalid password");
-        return "logged in !!";
+        const token = (0, utils_1.signJwt)(user);
+        ctx.res.cookie("qid", token, {
+            maxAge: 3.154e10,
+            httpOnly: true,
+            domain: "localhost",
+            path: "/",
+            sameSite: "strict",
+            secure: false,
+        });
+        return token;
     }
 }
 exports.UserService = UserService;
