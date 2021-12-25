@@ -24,8 +24,8 @@ let UserResolver = class UserResolver {
     createUser(input) {
         return this.userService.createUser(input);
     }
-    login(ctx, input) {
-        return this.userService.login(input, ctx);
+    login(input) {
+        return this.userService.login(input);
     }
     me(ctx) {
         return ctx.user;
@@ -40,10 +40,9 @@ __decorate([
 ], UserResolver.prototype, "createUser", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => String),
-    __param(0, (0, type_graphql_1.Ctx)()),
-    __param(1, (0, type_graphql_1.Arg)("input")),
+    __param(0, (0, type_graphql_1.Arg)("input")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, schemas_1.LoginInput]),
+    __metadata("design:paramtypes", [schemas_1.LoginInput]),
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "login", null);
 __decorate([

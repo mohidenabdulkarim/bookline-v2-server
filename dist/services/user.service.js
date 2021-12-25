@@ -12,22 +12,15 @@ class UserService {
     async createUser(input) {
         return schemas_1.UserModel.create(input);
     }
-    async login(input, ctx) {
-        const user = await schemas_1.UserModel.findOne().findByEmail(input.email).lean();
+    async login(input) {
+        const e = "Invalid username/password";
+        const user = await schemas_1.UserModel.findOne({ username: input.username }).lean();
         if (!user)
-            throw new apollo_server_1.ApolloError("Invalid email");
+            throw new apollo_server_1.ApolloError(e);
         const isValid = await bcrypt_1.default.compare(input.password, user.password);
         if (!isValid)
-            throw new apollo_server_1.ApolloError("Invalid password");
+            throw new apollo_server_1.ApolloError(e);
         const token = (0, utils_1.signJwt)(user);
-        ctx.res.cookie("qid", token, {
-            maxAge: 3.154e10,
-            httpOnly: true,
-            domain: "localhost",
-            path: "/",
-            sameSite: "strict",
-            secure: false,
-        });
         return token;
     }
 }

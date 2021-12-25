@@ -17,9 +17,6 @@ const typegoose_1 = require("@typegoose/typegoose");
 const class_validator_1 = require("class-validator");
 const type_graphql_1 = require("type-graphql");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-function findByEmail(email) {
-    return this.findOne({ email });
-}
 let User = class User {
 };
 __decorate([
@@ -30,16 +27,19 @@ __decorate([
     (0, type_graphql_1.Field)(() => String),
     (0, typegoose_1.prop)({ required: true }),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    (0, typegoose_1.prop)({ required: true }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
+], User.prototype, "username", void 0);
 __decorate([
     (0, typegoose_1.prop)({ required: true }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => Date),
+    __metadata("design:type", Date)
+], User.prototype, "createdAt", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => Date),
+    __metadata("design:type", Date)
+], User.prototype, "updatedAt", void 0);
 User = __decorate([
     (0, typegoose_1.pre)("save", async function () {
         if (!this.isModified("password")) {
@@ -49,23 +49,19 @@ User = __decorate([
         const hash = await bcrypt_1.default.hash(this.password, salt);
         this.password = hash;
     }),
-    (0, typegoose_1.index)({ email: 1 }),
-    (0, typegoose_1.queryMethod)(findByEmail),
+    (0, typegoose_1.index)({ username: 1 }),
     (0, type_graphql_1.ObjectType)()
 ], User);
 exports.User = User;
-exports.UserModel = (0, typegoose_1.getModelForClass)(User);
+exports.UserModel = (0, typegoose_1.getModelForClass)(User, {
+    schemaOptions: { timestamps: true },
+});
 let CreateUserInput = class CreateUserInput {
 };
 __decorate([
     (0, type_graphql_1.Field)(() => String),
     __metadata("design:type", String)
-], CreateUserInput.prototype, "name", void 0);
-__decorate([
-    (0, class_validator_1.IsEmail)(),
-    (0, type_graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], CreateUserInput.prototype, "email", void 0);
+], CreateUserInput.prototype, "username", void 0);
 __decorate([
     (0, class_validator_1.MinLength)(5, { message: "min length is 5" }),
     (0, class_validator_1.MaxLength)(50, { message: "max length is 50" }),
@@ -81,7 +77,7 @@ let LoginInput = class LoginInput {
 __decorate([
     (0, type_graphql_1.Field)(() => String),
     __metadata("design:type", String)
-], LoginInput.prototype, "email", void 0);
+], LoginInput.prototype, "username", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => String),
     __metadata("design:type", String)

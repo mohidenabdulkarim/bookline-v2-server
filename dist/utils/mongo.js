@@ -7,7 +7,7 @@ exports.connect = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 async function connect() {
     try {
-        await mongoose_1.default.connect("mongodb://127.0.0.1:27017/graphql-api");
+        await mongoose_1.default.connect("mongodb://127.0.0.1:27017/bookline");
         console.log("Db..");
     }
     catch (e) {

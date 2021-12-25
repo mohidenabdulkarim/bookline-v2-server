@@ -22,6 +22,10 @@ export class Product {
   @prop({ type: String, required: true })
   description: string;
 
+  @Field(() => [String])
+  @prop({ type: String, required: true, default: [] })
+  categories: string[];
+
   @Field(() => String)
   @prop({ type: String, required: true })
   price: string;
@@ -33,9 +37,16 @@ export class Product {
     unique: true,
   })
   productId: string;
+
+  @Field(() => Date)
+  createdAt: Date;
+  @Field(() => Date)
+  updatedAt: Date;
 }
 
-export const ProductModel = getModelForClass<typeof Product>(Product);
+export const ProductModel = getModelForClass<typeof Product>(Product, {
+  schemaOptions: { timestamps: true },
+});
 
 @InputType()
 export class CreateProductInput {
@@ -55,6 +66,9 @@ export class CreateProductInput {
   @Min(1)
   @Field()
   price: number;
+
+  @Field(() => [String])
+  categories: string[];
 }
 
 @InputType()
